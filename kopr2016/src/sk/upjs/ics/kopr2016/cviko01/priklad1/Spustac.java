@@ -1,4 +1,4 @@
-package sk.upjs.ics.kopr2016.priklad1;
+package sk.upjs.ics.kopr2016.cviko01.priklad1;
 
 public class Spustac {
 

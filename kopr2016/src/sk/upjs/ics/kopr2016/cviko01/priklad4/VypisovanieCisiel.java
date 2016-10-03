@@ -1,4 +1,4 @@
-package sk.upjs.ics.kopr2016.priklad3;
+package sk.upjs.ics.kopr2016.cviko01.priklad4;
 
 public class VypisovanieCisiel implements Runnable {
 
@@ -11,9 +11,11 @@ public class VypisovanieCisiel implements Runnable {
 	@Override
 	public void run() {
 		String menoVlakna = Thread.currentThread().getName();
-		for(int i = 1; i <= 100000; i++) {
-			System.out.println(menoVlakna+": " 
-					+ pocitadlo.getNext() + ". krat");
+		for(int i = 1; i <= 100; i++) {
+			synchronized (pocitadlo) {
+				System.out.println(menoVlakna + ": " 
+						+ pocitadlo.getNext() + ". krat");
+			}
 		}
 	}
 

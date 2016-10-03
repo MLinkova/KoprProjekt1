@@ -1,4 +1,4 @@
-package sk.upjs.ics.kopr2016.priklad2;
+package sk.upjs.ics.kopr2016.cviko01.priklad2;
 
 public class VypisovanieCisiel implements Runnable {
 

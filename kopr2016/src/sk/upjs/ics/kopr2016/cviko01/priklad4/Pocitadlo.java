@@ -1,4 +1,4 @@
-package sk.upjs.ics.kopr2016.priklad3;
+package sk.upjs.ics.kopr2016.cviko01.priklad4;
 
 public class Pocitadlo {
 
