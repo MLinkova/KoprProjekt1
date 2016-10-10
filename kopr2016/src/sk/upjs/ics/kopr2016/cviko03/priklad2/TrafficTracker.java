@@ -1,17 +1,20 @@
-package sk.upjs.ics.kopr2015.cviko03.zadanie;
+package sk.upjs.ics.kopr2016.cviko03.priklad2;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class TrafficTracker {
 
-	private final Map<String, Point> locations;
+	private final ConcurrentMap<String, Point> locations;
 	
 	public TrafficTracker(Map<String, Point> locations) {
-		this.locations = locations;
+		this.locations = new ConcurrentHashMap<>(locations);
 	}
 
 	public Map<String, Point> getLocations() {
-		return locations;
+		return Collections.unmodifiableMap(locations);
 	}
 
 	public Point getLocation(String id) {
@@ -20,10 +23,8 @@ public class TrafficTracker {
 	}
 
 	public  void setLocation(String id, int x, int y) {
-		Point loc = (Point) locations.get(id);
+		Point loc = locations.replace(id, new Point(x,y));
 		if (loc == null)
 			throw new IllegalArgumentException("No such ID: " + id);
-		loc.setX(x);
-		loc.setY(y);
 	}
 }

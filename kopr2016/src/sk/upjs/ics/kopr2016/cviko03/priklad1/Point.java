@@ -1,4 +1,4 @@
-package sk.upjs.ics.kopr2015.cviko03.zadanie;
+package sk.upjs.ics.kopr2016.cviko03.priklad1;
 
 public class Point {
 
