@@ -32,7 +32,7 @@ public class WordCounter {
 		long start = System.nanoTime();
 		List<BlockingDeque<File>> deques = new ArrayList<>();
 		for(int i = 0; i < NUMBER_OF_SEARCHERS; i++) {
-			deques.add(new LinkedBlockingDeque<>());
+			deques.add(new LinkedBlockingDeque<File>());
 		}
 		deques.get(0).offerFirst(dir);
 		for(int i = 0; i < NUMBER_OF_SEARCHERS; i++) {
