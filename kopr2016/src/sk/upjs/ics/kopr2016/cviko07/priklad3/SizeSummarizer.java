@@ -59,8 +59,12 @@ public class SizeSummarizer implements Callable<Void>{
 			while( i < futureList.size()) {
 				Future<DirSize> future = futureList.get(i);
 				try{
-					DirSize dirSize = future.get();
-					System.out.println("Čas: "+ (System.nanoTime()-start)/1000000 +" ms   " + dirSize);
+					if (future.isDone()) {
+						DirSize dirSize = future.get();
+						System.out.println("Čas: "+ (System.nanoTime()-start)/1000000 +" ms   " + dirSize);
+					} else {
+						System.out.println("nezacata uloha");
+					}
 				} catch(ExecutionException e) {
 					Throwable t = e.getCause();
 					if (t instanceof DirectoryForbiddenException) {
@@ -75,9 +79,7 @@ public class SizeSummarizer implements Callable<Void>{
 						DirSize dirSize = dfe.getDirSize();
 						System.err.println("Čas: "+ (System.nanoTime()-start)/1000000 +" ms prerusene, neuplna velkost z " + dirSize);
 					}
-				} catch (InterruptedException ce) {
-					System.out.println("nezacata uloha");
-				}
+				} 
 				i++;
 			} 
 		}
