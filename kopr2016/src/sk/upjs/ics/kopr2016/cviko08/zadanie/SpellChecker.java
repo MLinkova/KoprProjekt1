@@ -1,4 +1,4 @@
-package sk.gursky.kopr2016.cviko08.zadanie;
+package sk.upjs.ics.kopr2016.cviko08.zadanie;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;

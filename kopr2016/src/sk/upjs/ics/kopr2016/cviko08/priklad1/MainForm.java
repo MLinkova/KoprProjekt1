@@ -1,4 +1,4 @@
-package sk.gursky.kopr2016.cviko08.zadanie;
+package sk.upjs.ics.kopr2016.cviko08.priklad1;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 public class MainForm extends JFrame {
@@ -27,23 +28,25 @@ public class MainForm extends JFrame {
 	}
 
 	public void triggerSpellCheck() throws InterruptedException {
-		while(true) {
-			String textField = textArea.getText();
-			SpellChecker spellChecker = new SpellChecker();
-			List<SpellChecker.SpellcheckBoundary> kontrola = spellChecker.check(textField);
-			if (kontrola.isEmpty()) {
-				redGreenPanel.setGreenState(true);  // korektny text
-			}
-			else {
-				redGreenPanel.setGreenState(false); // zly text
-			}
-		}
+		SpellCheckerSwingWorker swingWorker = new SpellCheckerSwingWorker(textArea, redGreenPanel);
+		swingWorker.execute();
 	}
 	
 
 	public static void main(String[] args) throws InterruptedException {
-		MainForm form = new MainForm();
-		form.setVisible(true);
-		form.triggerSpellCheck();
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					MainForm form = new MainForm();
+					form.setVisible(true);
+					form.triggerSpellCheck();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
