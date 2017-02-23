@@ -1,25 +1,44 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package sk.upjs.ics.projektkopr1.oprava;
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
+package sk.upjs.ics.kopr1;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.ObjectInputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 /**
  *
  * @author Michaela
  */
 public class MainForm extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form MainForm
      */
     private Klient klient;
+    private int pocetTCPspojeni;
+    private Set<Long> precitaneOfesty;
     public MainForm() {
         initComponents();
-        
+        boloPrerusenie();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,25 +48,19 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pocetTCPSpojeniLabel = new javax.swing.JLabel();
-        pocetTCPSpojeniTextField = new javax.swing.JTextField();
+        pocetTCPTextFiled = new javax.swing.JTextField();
+        pocetTCPLabel = new javax.swing.JLabel();
         spustiButton = new javax.swing.JButton();
         prerusButton = new javax.swing.JButton();
         pokracujButton = new javax.swing.JButton();
-        zrusButton = new javax.swing.JButton();
+        zrusitButton = new javax.swing.JButton();
         stahujemProgressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pocetTCPSpojeniLabel.setText("Zadajte počet TCP spojení : ");
+        pocetTCPLabel.setText("Zadajte počet TCP spojení : ");
 
-        pocetTCPSpojeniTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pocetTCPSpojeniTextFieldActionPerformed(evt);
-            }
-        });
-
-        spustiButton.setText("Spustiť");
+        spustiButton.setText("Spusiť");
         spustiButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spustiButtonActionPerformed(evt);
@@ -68,10 +81,10 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        zrusButton.setText("Zrušiť");
-        zrusButton.addActionListener(new java.awt.event.ActionListener() {
+        zrusitButton.setText("Zrušiť");
+        zrusitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zrusButtonActionPerformed(evt);
+                zrusitButtonActionPerformed(evt);
             }
         });
 
@@ -80,78 +93,95 @@ public class MainForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(stahujemProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(68, 68, 68)
-                                .addComponent(pocetTCPSpojeniLabel)
-                                .addGap(28, 28, 28)
-                                .addComponent(pocetTCPSpojeniTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(spustiButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(prerusButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(pokracujButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(zrusButton)))
-                        .addGap(0, 29, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(stahujemProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(spustiButton)
+                        .addGap(34, 34, 34)
+                        .addComponent(prerusButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addComponent(pokracujButton)
+                        .addGap(26, 26, 26)
+                        .addComponent(zrusitButton)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(pocetTCPLabel)
+                .addGap(66, 66, 66)
+                .addComponent(pocetTCPTextFiled, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pocetTCPSpojeniLabel)
-                    .addComponent(pocetTCPSpojeniTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pocetTCPLabel)
+                    .addComponent(pocetTCPTextFiled, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addComponent(stahujemProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spustiButton)
                     .addComponent(prerusButton)
                     .addComponent(pokracujButton)
-                    .addComponent(zrusButton))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(zrusitButton))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void pocetTCPSpojeniTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pocetTCPSpojeniTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_pocetTCPSpojeniTextFieldActionPerformed
-
+    
     private void spustiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spustiButtonActionPerformed
-      klient=new Klient(Integer.parseInt(pocetTCPSpojeniTextField.getText()));
-      klient.spusti();
-      setProgressBar();
+        klient= new Klient(Integer.parseInt(pocetTCPTextFiled.getText()), stahujemProgressBar);
+        klient.spusti();
     }//GEN-LAST:event_spustiButtonActionPerformed
-
+    
     private void prerusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prerusButtonActionPerformed
-       klient.prerus();
+        if(klient!=null){
+            klient.prerusit();
+        }else{
+            JOptionPane.showMessageDialog(this, "Nezačalo sa kopirovať!");
+        }
     }//GEN-LAST:event_prerusButtonActionPerformed
-
+    
     private void pokracujButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pokracujButtonActionPerformed
-        klient=new Klient();
-        klient.pokracuj();
-        setProgressBar();
-    }//GEN-LAST:event_pokracujButtonActionPerformed
-
-    private void zrusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zrusButtonActionPerformed
-      klient.zrusit();
-    }//GEN-LAST:event_zrusButtonActionPerformed
-
-    public void setProgressBar(){
-      //   SwingWorker swing= new SwingWorker(stahujemProgressBar,klient,);
-        // swing.execute();
         
+        klient= new Klient(this);
+        klient.pokracuj();
+    }//GEN-LAST:event_pokracujButtonActionPerformed
+    
+    private void zrusitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zrusitButtonActionPerformed
+        if(klient!=null){
+            klient.zrusit();
+            setVisible(false);
+        }else{
+            JOptionPane.showMessageDialog(this, "Nezačalo sa kopirovať!");
+        }
+    }//GEN-LAST:event_zrusitButtonActionPerformed
+    
+    
+    private void boloPrerusenie(){
+        
+        File f= new File(Konstanty.ULOZ_SUBOR);
+        if(f.exists() && f.length()>0){
+             try {
+                precitaneOfesty = Collections.synchronizedSet(new HashSet<Long>());
+                Scanner sc= new Scanner(f);
+                pocetTCPspojeni=Integer.parseInt(sc.next());
+                while(sc.hasNext()){
+                    long l =Long.parseLong(sc.next());
+                    precitaneOfesty.add(l);
+                }
+                sc.close();
+                int valueProgressBar= (int) (precitaneOfesty.size()*100.0/pocetTCPspojeni);
+                stahujemProgressBar.setValue(valueProgressBar);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+   
     }
     
     /**
@@ -161,8 +191,8 @@ public class MainForm extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -180,7 +210,7 @@ public class MainForm extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -188,14 +218,14 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel pocetTCPSpojeniLabel;
-    private javax.swing.JTextField pocetTCPSpojeniTextField;
+    private javax.swing.JLabel pocetTCPLabel;
+    private javax.swing.JTextField pocetTCPTextFiled;
     private javax.swing.JButton pokracujButton;
     private javax.swing.JButton prerusButton;
     private javax.swing.JButton spustiButton;
     private javax.swing.JProgressBar stahujemProgressBar;
-    private javax.swing.JButton zrusButton;
+    private javax.swing.JButton zrusitButton;
     // End of variables declaration//GEN-END:variables
 }

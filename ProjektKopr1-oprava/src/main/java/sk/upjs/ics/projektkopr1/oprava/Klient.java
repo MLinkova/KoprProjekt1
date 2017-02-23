@@ -33,7 +33,7 @@ public class Klient {
             FILE_TO_RECEIVED = "C:\\Users\\Michaela\\Desktop\\KoprProjekt1-downloaded.mp4";
     private  int pocetTCPspojeni;
     public static int uzSkopirovane;
-   static int DlzkaSuboru;
+    static int DlzkaSuboru;
     private RandomAccessFile raf;
     private boolean prebiehaKopirovanie = false;
     private volatile int prijate = 0;
@@ -263,6 +263,10 @@ public class Klient {
            Logger.getLogger(Klient.class.getName()).log(Level.SEVERE, null, ex);
        }
    }
+
+    void informAboutFinishedCopy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
    
 
 }

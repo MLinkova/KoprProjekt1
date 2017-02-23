@@ -41,6 +41,10 @@ public class PrijimamSubor implements Runnable {
         this.zaciatok = offset;
         this.raf = raf;
     }
+
+    PrijimamSubor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     public int getZapisane() {
         return zapisane;
@@ -113,5 +117,9 @@ public class PrijimamSubor implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void terminate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
